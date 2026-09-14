@@ -94,6 +94,7 @@ void AClickMovePlayerController::OnClickPressed()
 
 void AClickMovePlayerController::OnClickHoldStarted()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ClickHold Started, mode=%d"), (int32)GetCurrentMode());
 	if (GetCurrentMode() == EInteractionMode::Examine)
 	{
 		bIsDraggingExamine = true;
@@ -108,6 +109,7 @@ void AClickMovePlayerController::OnClickHoldReleased()
 void AClickMovePlayerController::OnLook(const FInputActionValue& Value)
 {
 	const FVector2D Delta = Value.Get<FVector2D>();
+	UE_LOG(LogTemp, Warning, TEXT("OnLook delta=%s dragging=%d mode=%d"), *Delta.ToString(), bIsDraggingExamine, (int32)GetCurrentMode());
 	const EInteractionMode Mode = GetCurrentMode();
 
 	if (Mode == EInteractionMode::Examine && bIsDraggingExamine && FocusStack.Num() > 0)
@@ -222,6 +224,7 @@ void AClickMovePlayerController::PushFirstPersonCamera(ACameraActor* Camera)
 
 void AClickMovePlayerController::PushSubScene(TSubclassOf<APawn> PawnClass, AActor* EntryPoint)
 {
+	OnSubSceneStateChanged.Broadcast(true);
 	if (!PawnClass || !EntryPoint || !GetWorld())
 	{
 		return;
@@ -314,6 +317,7 @@ void AClickMovePlayerController::PopFocus()
 		break;
 
 	case EInteractionMode::EnterSubScene:
+		OnSubSceneStateChanged.Broadcast(false);
 		if (Layer.PreviousPawn)
 		{
 			Layer.PreviousPawn->SetActorHiddenInGame(false);

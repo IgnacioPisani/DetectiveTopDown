@@ -10,6 +10,9 @@ class UInputMappingContext;
 class UInputAction;
 class UPickableComponent;
 class ACameraActor;
+// Arriba del archivo, antes de la clase:
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSubSceneStateChanged, bool, bIsEntering);
+
 
 /**
  * PlayerController del nivel top-down. Maneja:
@@ -25,7 +28,10 @@ class AClickMovePlayerController : public APlayerController
 
 public:
 	AClickMovePlayerController();
-
+	
+	// Dentro de la clase, en la sección public:
+	UPROPERTY(BlueprintAssignable, Category = "Post Process")
+	FOnSubSceneStateChanged OnSubSceneStateChanged;
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
