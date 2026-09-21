@@ -13,7 +13,7 @@ class UUserWidget;
  *
  * Ejemplo de stack para "silla -> escritorio -> objeto en mano":
  *   [0] EnterSubScene  (guarda el pawn de top-down)
- *   [1] Examine        (guarda la rotación original del objeto)
+ *   [1] Examine        (guarda posición y rotación originales del objeto)
  */
 USTRUCT()
 struct FFocusLayer
@@ -25,8 +25,6 @@ struct FFocusLayer
 	/** Pawn que estaba poseído antes de entrar a esta capa. */
 	UPROPERTY()
 	TObjectPtr<APawn> PreviousPawn = nullptr;
-
-	FVector ExamineOriginalLocation = FVector::ZeroVector;
 
 	/** ViewTarget que estaba activo antes de entrar a esta capa. */
 	UPROPERTY()
@@ -44,6 +42,7 @@ struct FFocusLayer
 	UPROPERTY()
 	TObjectPtr<AActor> ExamineTarget = nullptr;
 
-	/** Rotación original del objeto examinado, para restaurarla al salir. */
+	/** Posición y rotación originales del objeto examinado, para restaurarlas al salir. */
+	FVector ExamineOriginalLocation = FVector::ZeroVector;
 	FRotator ExamineOriginalRotation = FRotator::ZeroRotator;
 };

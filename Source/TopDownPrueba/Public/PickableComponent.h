@@ -55,12 +55,13 @@ public:
 		meta = (EditCondition = "Mode==EInteractionMode::Examine"))
 	float ExamineRotationSpeed = 0.5f;
 
+	/** Distancia (en unidades) a la que el objeto se ubica frente a la cámara al examinarlo. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Examine",
+		meta = (EditCondition = "Mode==EInteractionMode::Examine"))
+	float ExamineDistance = 150.f;
+
 	// --------------- SimpleEvent ---------------
 	/** Bindeá esto en el Blueprint del actor para eventos custom (abrir puerta, etc). */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnInteractSignature OnInteractEvent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Examine",
-	meta = (EditCondition = "Mode==EInteractionMode::Examine"))
-	float ExamineDistance = 150.f;
 };
