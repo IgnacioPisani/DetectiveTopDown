@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Pawn.h"
 #include "SubSceneFirstPersonPawn.generated.h"
 
@@ -22,9 +23,11 @@ class ASubSceneFirstPersonPawn : public APawn
 
 public:
 	ASubSceneFirstPersonPawn();
-
+	FVector GetCameraLocation() const { return Camera->GetComponentLocation(); }
+	FRotator GetCameraRotation() const { return Camera->GetComponentRotation(); }
 	/** Llamado por el PlayerController con el delta del mouse cuando este pawn está activo. */
 	void AddLookInput(FVector2D Delta);
+
 
 protected:
 	virtual void BeginPlay() override;

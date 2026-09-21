@@ -56,12 +56,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> CancelAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputMappingContext> MouseLookMappingContext;
+	
 	void OnClickPressed();
 	void OnClickHoldStarted();
 	void OnClickHoldReleased();
 	void OnLook(const FInputActionValue& Value);
 	void OnCancel();
-
+	void ApplyPersistentMouseCapture();
+	void ReleaseMouseCapture();
 	// ------------- Interacción con pickeables -------------
 	void HandlePickableInteraction(AActor* Target, UPickableComponent* Pickable);
 

@@ -27,8 +27,18 @@ void AClickMovePlayerController::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	
+		if (MouseLookMappingContext)
+		{
+			Subsystem->AddMappingContext(MouseLookMappingContext, 0);
+		}
 	}
+	SetInputMode(FInputModeGameOnly());
+
+	ReleaseMouseCapture();   // <-- top-down empieza SIN captura forzada
+
 }
+
 
 void AClickMovePlayerController::SetupInputComponent()
 {
@@ -75,11 +85,21 @@ void AClickMovePlayerController::OnClickPressed()
 		return;
 	}
 
+
 	if (UPickableComponent* Pickable = Hit.GetActor()->FindComponentByClass<UPickableComponent>())
 	{
 		if (Pickable->bIsPickable)
 		{
 			HandlePickableInteraction(Hit.GetActor(), Pickable);
+
+			// Si este mismo click nos metió en modo Examine, arrancamos el
+			// arrastre ya mismo (el botón sigue presionado en este frame).
+			if (GetCurrentMode() == EInteractionMode::Examine)
+			{
+				bIsDraggingExamine = true;
+				UE_LOG(LogTemp, Warning, TEXT("Entered Examine + forced dragging=true"));
+
+			}
 			return;
 		}
 	}
@@ -109,10 +129,9 @@ void AClickMovePlayerController::OnClickHoldReleased()
 void AClickMovePlayerController::OnLook(const FInputActionValue& Value)
 {
 	const FVector2D Delta = Value.Get<FVector2D>();
-	UE_LOG(LogTemp, Warning, TEXT("OnLook delta=%s dragging=%d mode=%d"), *Delta.ToString(), bIsDraggingExamine, (int32)GetCurrentMode());
 	const EInteractionMode Mode = GetCurrentMode();
 
-	if (Mode == EInteractionMode::Examine && bIsDraggingExamine && FocusStack.Num() > 0)
+	if (Mode == EInteractionMode::Examine && IsInputKeyDown(EKeys::LeftMouseButton))
 	{
 		AActor* Target = FocusStack.Last().ExamineTarget;
 		if (!Target)
@@ -123,10 +142,22 @@ void AClickMovePlayerController::OnLook(const FInputActionValue& Value)
 		const UPickableComponent* Pickable = Target->FindComponentByClass<UPickableComponent>();
 		const float Speed = Pickable ? Pickable->ExamineRotationSpeed : 0.5f;
 
-		FRotator NewRotation = Target->GetActorRotation();
-		NewRotation.Yaw += Delta.X * Speed;
-		NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch - Delta.Y * Speed, -60.f, 60.f);
-		Target->SetActorRotation(NewRotation);
+		ASubSceneFirstPersonPawn* FPPawn = Cast<ASubSceneFirstPersonPawn>(GetPawn());
+		if (!FPPawn)
+		{
+			return;
+		}
+
+		const FQuat CameraQuat = FPPawn->GetCameraRotation().Quaternion();
+		const FVector CameraRight = CameraQuat.GetRightVector();
+		const FVector CameraUp = CameraQuat.GetUpVector();
+
+		const FQuat YawDelta = FQuat(CameraUp, FMath::DegreesToRadians(Delta.X * Speed));
+		const FQuat PitchDelta = FQuat(CameraRight, FMath::DegreesToRadians(-Delta.Y * Speed));
+
+		const FQuat CurrentQuat = Target->GetActorQuat();
+		const FQuat NewQuat = YawDelta * PitchDelta * CurrentQuat;
+		Target->SetActorRotation(NewQuat);
 	}
 	else if (Mode == EInteractionMode::EnterSubScene)
 	{
@@ -140,6 +171,31 @@ void AClickMovePlayerController::OnLook(const FInputActionValue& Value)
 void AClickMovePlayerController::OnCancel()
 {
 	PopFocus();
+}
+
+void AClickMovePlayerController::ApplyPersistentMouseCapture()
+{
+	if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
+	{
+		Viewport->SetMouseCaptureMode(EMouseCaptureMode::CapturePermanently);
+		Viewport->SetMouseLockMode(EMouseLockMode::LockAlways);
+
+		UE_LOG(LogTemp, Warning, TEXT("MouseCapture set. Current CaptureMode=%d LockMode=%d"),
+			(int32)Viewport->GetMouseCaptureMode(), (int32)Viewport->GetMouseLockMode());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ApplyPersistentMouseCapture: no GameViewport found!"));
+	}
+}
+
+void AClickMovePlayerController::ReleaseMouseCapture()
+{
+	if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
+	{
+		Viewport->SetMouseCaptureMode(EMouseCaptureMode::CaptureDuringMouseDown);
+		Viewport->SetMouseLockMode(EMouseLockMode::DoNotLock);
+	}
 }
 
 // ------------------------------------------------------------------------
@@ -261,6 +317,8 @@ void AClickMovePlayerController::PushSubScene(TSubclassOf<APawn> PawnClass, AAct
 	SetViewTargetWithBlend(NewPawn, 0.5f, EViewTargetBlendFunction::VTBlend_EaseInOut);
 
 	SetInputMode(FInputModeGameOnly());
+	ApplyPersistentMouseCapture();   // <-- agregar esta línea acá
+
 	bShowMouseCursor = true; // seguimos necesitando el cursor para clickear objetos en la sub-escena
 
 	FocusStack.Add(Layer);
@@ -276,14 +334,27 @@ void AClickMovePlayerController::PushExamine(AActor* TargetActor)
 	FFocusLayer Layer;
 	Layer.Mode = EInteractionMode::Examine;
 	Layer.ExamineTarget = TargetActor;
+	Layer.ExamineOriginalLocation = TargetActor->GetActorLocation();
 	Layer.ExamineOriginalRotation = TargetActor->GetActorRotation();
 
-	// Punto de extensión: acá es donde podrías hacer un SetViewTargetWithBlend
-	// a una "cámara de mano" acercada al objeto, si querés ese efecto visual.
+	// Lo movemos al centro de la pantalla, delante de la cámara actual.
+	if (ASubSceneFirstPersonPawn* FPPawn = Cast<ASubSceneFirstPersonPawn>(GetPawn()))
+	{
+		const UPickableComponent* Pickable = TargetActor->FindComponentByClass<UPickableComponent>();
+		const float Distance = Pickable ? Pickable->ExamineDistance : 150.f;
+
+		const FVector CameraLocation = FPPawn->GetCameraLocation();
+		const FVector CameraForward = FPPawn->GetCameraRotation().Vector();
+
+		TargetActor->SetActorLocation(CameraLocation + CameraForward * Distance);
+		TargetActor->SetActorRotation(FPPawn->GetCameraRotation());
+	}
+
+	// Evita que colisione con nada mientras está flotando frente a cámara.
+	TargetActor->SetActorEnableCollision(false);
 
 	FocusStack.Add(Layer);
 }
-
 void AClickMovePlayerController::PopFocus()
 {
 	if (FocusStack.Num() == 0)
@@ -333,12 +404,16 @@ void AClickMovePlayerController::PopFocus()
 		}
 		bShowMouseCursor = true;
 		SetInputMode(FInputModeGameOnly());
+		ReleaseMouseCapture();   // <-- volvemos al modo de cursor libre para click-to-move
+
 		break;
 
 	case EInteractionMode::Examine:
 		if (Layer.ExamineTarget)
 		{
+			Layer.ExamineTarget->SetActorLocation(Layer.ExamineOriginalLocation);
 			Layer.ExamineTarget->SetActorRotation(Layer.ExamineOriginalRotation);
+			Layer.ExamineTarget->SetActorEnableCollision(true);
 		}
 		break;
 

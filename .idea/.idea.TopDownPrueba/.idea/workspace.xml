@@ -14,12 +14,15 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_TopDownPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_TopDownPlayerController.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_Default.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Input/IMC_MouseLook.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_MouseLook.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/FocusTypes.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/FocusTypes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/PickableComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/PickableComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/SubSceneFirstPersonPawn.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/SubSceneFirstPersonPawn.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,6 +201,9 @@
       <workItem from="1788985637003" duration="1422000" />
       <workItem from="1789344280886" duration="390000" />
       <workItem from="1789351746152" duration="3432000" />
+      <workItem from="1789409541581" duration="1533000" />
+      <workItem from="1789413154783" duration="2162000" />
+      <workItem from="1789946037681" duration="1974000" />
     </task>
     <servers />
   </component>

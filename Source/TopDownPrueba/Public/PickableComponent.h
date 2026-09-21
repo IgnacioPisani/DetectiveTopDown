@@ -59,4 +59,8 @@ public:
 	/** Bindeá esto en el Blueprint del actor para eventos custom (abrir puerta, etc). */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnInteractSignature OnInteractEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Examine",
+	meta = (EditCondition = "Mode==EInteractionMode::Examine"))
+	float ExamineDistance = 150.f;
 };

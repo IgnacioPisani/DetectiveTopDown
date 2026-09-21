@@ -26,6 +26,8 @@ struct FFocusLayer
 	UPROPERTY()
 	TObjectPtr<APawn> PreviousPawn = nullptr;
 
+	FVector ExamineOriginalLocation = FVector::ZeroVector;
+
 	/** ViewTarget que estaba activo antes de entrar a esta capa. */
 	UPROPERTY()
 	TObjectPtr<AActor> PreviousViewTarget = nullptr;
