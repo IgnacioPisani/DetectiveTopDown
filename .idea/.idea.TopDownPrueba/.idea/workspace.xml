@@ -14,12 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_TopDownPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_TopDownPlayerController.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/PickableComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/PickableComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/FocusTypes.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/FocusTypes.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/PickableComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/PickableComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/TopDown/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Input/IMC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +200,7 @@
       <workItem from="1789413154783" duration="2162000" />
       <workItem from="1789946037681" duration="1974000" />
       <workItem from="1789958054256" duration="624000" />
-      <workItem from="1790021827169" duration="1822000" />
+      <workItem from="1790021827169" duration="3803000" />
     </task>
     <servers />
   </component>

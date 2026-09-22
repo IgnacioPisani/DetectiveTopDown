@@ -46,10 +46,12 @@ void AClickMovePlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
 	{
+		/*
 		if (ClickAction)
 		{
 			EIC->BindAction(ClickAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnClickPressed);
 		}
+		*/
 		if (ClickHoldAction)
 		{
 			EIC->BindAction(ClickHoldAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnClickHoldStarted);
@@ -69,6 +71,32 @@ void AClickMovePlayerController::SetupInputComponent()
 // ------------------------------------------------------------------------
 // Input handlers
 // ------------------------------------------------------------------------
+
+bool AClickMovePlayerController::TryHandleClickOnActor(AActor* HitActor)
+{
+	// Si estamos enfocados (sub-escena, examine, UI), nunca dejamos que
+	// el click dispare movimiento del personaje de top-down.
+	if (IsFocused())
+	{
+		return true;
+	}
+
+	if (!HitActor)
+	{
+		return false;
+	}
+
+	if (UPickableComponent* Pickable = HitActor->FindComponentByClass<UPickableComponent>())
+	{
+		if (Pickable->bIsPickable)
+		{
+			HandlePickableInteraction(HitActor, Pickable);
+			return true; // absorbido: no mover
+		}
+	}
+
+	return false; // no es pickeable: el Blueprint procede a mover normal
+}
 
 void AClickMovePlayerController::OnClickPressed()
 {

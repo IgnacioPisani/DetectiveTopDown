@@ -58,6 +58,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> MouseLookMappingContext;
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool TryHandleClickOnActor(AActor* HitActor);
 	
 	void OnClickPressed();
 	void OnClickHoldStarted();
