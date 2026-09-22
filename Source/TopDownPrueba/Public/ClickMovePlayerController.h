@@ -83,7 +83,7 @@ protected:
 	// ---------------- Stack de foco ----------------
 	UPROPERTY()
 	TArray<FFocusLayer> FocusStack;
-
+	bool GetFloorLocationUnderCursor(FVector& OutLocation) const;
 	bool bIsDraggingExamine = false;
 
 	void PushShowUI(TSubclassOf<UUserWidget> WidgetClass);

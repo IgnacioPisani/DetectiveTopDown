@@ -109,13 +109,13 @@ void AClickMovePlayerController::OnSetDestinationTriggered()
 
 	FollowTime += GetWorld()->GetDeltaSeconds();
 
-	FHitResult Hit;
-	if (!GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+	FVector FloorLocation;
+	if (!GetFloorLocationUnderCursor(FloorLocation))
 	{
 		return;
 	}
 
-	CachedDestination = Hit.Location;
+	CachedDestination = FloorLocation;
 
 	if (APawn* ControlledPawn = GetPawn())
 	{
@@ -300,6 +300,25 @@ void AClickMovePlayerController::HandlePickableInteraction(AActor* Target, UPick
 	default:
 		break;
 	}
+}
+
+bool AClickMovePlayerController::GetFloorLocationUnderCursor(FVector& OutLocation) const
+{
+	FVector WorldOrigin, WorldDirection;
+	if (!DeprojectMousePositionToWorld(WorldOrigin, WorldDirection))
+	{
+		return false;
+	}
+
+	// Usamos la altura Z actual del pawn como referencia del plano del piso.
+	// Sirve mientras el piso sea plano (sin escalones/rampas); si tu escena
+	// tiene desniveles, este approach necesitaría ajustarse por zona.
+	const APawn* ControlledPawn = GetPawn();
+	const float FloorZ = ControlledPawn ? ControlledPawn->GetActorLocation().Z : 0.f;
+
+	const FPlane FloorPlane(FVector(0.f, 0.f, FloorZ), FVector::UpVector);
+	OutLocation = FMath::RayPlaneIntersection(WorldOrigin, WorldDirection, FloorPlane);
+	return true;
 }
 
 // ------------------------------------------------------------------------
