@@ -1,6 +1,7 @@
 #include "ClickMovePlayerController.h"
 
 #include "AIController.h"
+#include "NavigationSystem.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
@@ -73,25 +74,80 @@ void AClickMovePlayerController::SetupInputComponent()
 // Input handlers
 // ------------------------------------------------------------------------
 
+void AClickMovePlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	if (!PendingPickableActor.IsValid() || !PendingPickableComponent.IsValid())
+	{
+		return;
+	}
+
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn)
+	{
+		ClearPendingPickable();
+		return;
+	}
+
+	const float DistSq = FVector::DistSquared2D(
+		ControlledPawn->GetActorLocation(), PendingPickableActor->GetActorLocation());
+
+	if (DistSq <= FMath::Square(PickableApproachAcceptanceRadius))
+	{
+		AActor* TargetActor = PendingPickableActor.Get();
+		UPickableComponent* TargetPickable = PendingPickableComponent.Get();
+		ClearPendingPickable();
+		StopMovement();
+
+		if (TargetActor && TargetPickable && TargetPickable->bIsPickable)
+		{
+			HandlePickableInteraction(TargetActor, TargetPickable);
+		}
+	}
+}
+
+void AClickMovePlayerController::ClearPendingPickable()
+{
+	PendingPickableActor = nullptr;
+	PendingPickableComponent = nullptr;
+}
 
 
 void AClickMovePlayerController::OnInputStarted()
 {
-	// Si el click cae sobre un pickable, o estamos enfocados, lo absorbe
-	// la interacción y no arrancamos ningún movimiento.
 	if (IsFocused())
 	{
 		return;
 	}
 
+	// Cualquier click nuevo cancela un acercamiento pendiente anterior.
+	ClearPendingPickable();
+
 	FHitResult Hit;
-	if (GetHitResultUnderCursor(ECC_Visibility, false, Hit) && Hit.GetActor())
+	if (GetHitResultUnderCursor(ECC_Visibility, true, Hit) && Hit.GetActor())
 	{
 		if (UPickableComponent* Pickable = Hit.GetActor()->FindComponentByClass<UPickableComponent>())
 		{
 			if (Pickable->bIsPickable)
 			{
-				HandlePickableInteraction(Hit.GetActor(), Pickable);
+				PendingPickableActor = Hit.GetActor();
+				PendingPickableComponent = Pickable;
+
+				FVector MoveTarget = Hit.GetActor()->GetActorLocation();
+
+				if (UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld()))
+				{
+					FNavLocation ProjectedLocation;
+					// Radio de búsqueda generoso: busca el punto navegable más
+					// cercano dentro de 200 unidades del objeto.
+					if (NavSys->ProjectPointToNavigation(MoveTarget, ProjectedLocation, FVector(200.f, 200.f, 200.f)))
+					{
+						MoveTarget = ProjectedLocation.Location;
+					}
+				}
+
+				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MoveTarget);
 				return;
 			}
 		}
@@ -99,6 +155,7 @@ void AClickMovePlayerController::OnInputStarted()
 
 	StopMovement();
 }
+
 
 void AClickMovePlayerController::OnSetDestinationTriggered()
 {

@@ -8,7 +8,8 @@
 class UUserWidget;
 class ACameraActor;
 class APawn;
-
+class UMeshComponent;
+class UMaterialInterface;
 /**
  * Agregá este componente a cualquier Actor que quieras que sea clickeable.
  * El modo (Mode) define qué hace el PlayerController cuando lo clickean;
@@ -64,4 +65,24 @@ public:
 	/** Bindeá esto en el Blueprint del actor para eventos custom (abrir puerta, etc). */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnInteractSignature OnInteractEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Hover")
+	bool bEnableHoverHighlight = true;
+
+	/** Material de overlay (Domain: Surface) usado para resaltar el mesh al pasar el mouse. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Hover")
+	UMaterialInterface* HoverHighlightMaterial = nullptr;
+
+protected:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void HandleBeginCursorOver(AActor* TouchedActor);
+
+	UFUNCTION()
+	void HandleEndCursorOver(AActor* TouchedActor);
+
+private:
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UMeshComponent>> CachedMeshComponents;
 };

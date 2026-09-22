@@ -86,6 +86,24 @@ protected:
 	bool GetFloorLocationUnderCursor(FVector& OutLocation) const;
 	bool bIsDraggingExamine = false;
 
+	virtual void PlayerTick(float DeltaTime) override;
+
+	// ... tus funciones existentes ...
+
+	/** Pickable al que el personaje se está acercando caminando, antes de
+	 *  disparar su interacción. Null si no hay ninguno pendiente. */
+	UPROPERTY()
+	TWeakObjectPtr<AActor> PendingPickableActor;
+
+	UPROPERTY()
+	TWeakObjectPtr<UPickableComponent> PendingPickableComponent;
+
+	/** Distancia a la que se considera "llegó" al objeto. */
+	UPROPERTY(EditDefaultsOnly, Category = "ClickToMove")
+	float PickableApproachAcceptanceRadius = 90.f;
+
+	void ClearPendingPickable();
+
 	void PushShowUI(TSubclassOf<UUserWidget> WidgetClass);
 	void PushFirstPersonCamera(ACameraActor* Camera);
 	void PushSubScene(TSubclassOf<APawn> PawnClass, AActor* EntryPoint);
