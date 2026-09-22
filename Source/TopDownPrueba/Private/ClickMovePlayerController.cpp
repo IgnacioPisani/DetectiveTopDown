@@ -46,12 +46,13 @@ void AClickMovePlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		/*
 		if (ClickAction)
 		{
-			EIC->BindAction(ClickAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnClickPressed);
+			EIC->BindAction(ClickAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnInputStarted);
+			EIC->BindAction(ClickAction, ETriggerEvent::Triggered, this, &AClickMovePlayerController::OnSetDestinationTriggered);
+			EIC->BindAction(ClickAction, ETriggerEvent::Completed, this, &AClickMovePlayerController::OnSetDestinationReleased);
+			EIC->BindAction(ClickAction, ETriggerEvent::Canceled, this, &AClickMovePlayerController::OnSetDestinationReleased);
 		}
-		*/
 		if (ClickHoldAction)
 		{
 			EIC->BindAction(ClickHoldAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnClickHoldStarted);
@@ -72,30 +73,72 @@ void AClickMovePlayerController::SetupInputComponent()
 // Input handlers
 // ------------------------------------------------------------------------
 
-bool AClickMovePlayerController::TryHandleClickOnActor(AActor* HitActor)
+
+
+void AClickMovePlayerController::OnInputStarted()
 {
-	// Si estamos enfocados (sub-escena, examine, UI), nunca dejamos que
-	// el click dispare movimiento del personaje de top-down.
+	// Si el click cae sobre un pickable, o estamos enfocados, lo absorbe
+	// la interacción y no arrancamos ningún movimiento.
 	if (IsFocused())
 	{
-		return true;
+		return;
 	}
 
-	if (!HitActor)
+	FHitResult Hit;
+	if (GetHitResultUnderCursor(ECC_Visibility, false, Hit) && Hit.GetActor())
 	{
-		return false;
-	}
-
-	if (UPickableComponent* Pickable = HitActor->FindComponentByClass<UPickableComponent>())
-	{
-		if (Pickable->bIsPickable)
+		if (UPickableComponent* Pickable = Hit.GetActor()->FindComponentByClass<UPickableComponent>())
 		{
-			HandlePickableInteraction(HitActor, Pickable);
-			return true; // absorbido: no mover
+			if (Pickable->bIsPickable)
+			{
+				HandlePickableInteraction(Hit.GetActor(), Pickable);
+				return;
+			}
 		}
 	}
 
-	return false; // no es pickeable: el Blueprint procede a mover normal
+	StopMovement();
+}
+
+void AClickMovePlayerController::OnSetDestinationTriggered()
+{
+	if (IsFocused())
+	{
+		return;
+	}
+
+	FollowTime += GetWorld()->GetDeltaSeconds();
+
+	FHitResult Hit;
+	if (!GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+	{
+		return;
+	}
+
+	CachedDestination = Hit.Location;
+
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+		ControlledPawn->AddMovementInput(WorldDirection, 1.0, false);
+	}
+}
+
+void AClickMovePlayerController::OnSetDestinationReleased()
+{
+	if (IsFocused())
+	{
+		return;
+	}
+
+	// Click corto: navega al punto por NavMesh. Click sostenido/arrastrado:
+	// ya nos movimos frame a frame en OnSetDestinationTriggered, no hace falta más.
+	if (FollowTime <= ShortPressThreshold)
+	{
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, CachedDestination);
+	}
+
+	FollowTime = 0.f;
 }
 
 void AClickMovePlayerController::OnClickPressed()

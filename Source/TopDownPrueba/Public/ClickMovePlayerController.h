@@ -59,8 +59,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> MouseLookMappingContext;
 
-	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool TryHandleClickOnActor(AActor* HitActor);
+	// ---------------- Click-to-move ----------------
+	UPROPERTY(EditDefaultsOnly, Category = "ClickToMove")
+	float ShortPressThreshold = 0.3f;
+
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+
+	void OnInputStarted();
+	void OnSetDestinationTriggered();
+	void OnSetDestinationReleased();
 	
 	void OnClickPressed();
 	void OnClickHoldStarted();
