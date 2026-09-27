@@ -116,12 +116,15 @@ void AClickMovePlayerController::ClearPendingPickable()
 
 void AClickMovePlayerController::OnInputStarted()
 {
-	if (IsFocused())
+	const EInteractionMode Mode = GetCurrentMode();
+
+	// En modo Examine el click no dispara nada acá: el arrastre se maneja
+	// en OnLook() vía IsInputKeyDown, un click suelto no debe hacer nada.
+	if (Mode == EInteractionMode::Examine)
 	{
 		return;
 	}
 
-	// Cualquier click nuevo cancela un acercamiento pendiente anterior.
 	ClearPendingPickable();
 
 	FHitResult Hit;
@@ -131,31 +134,20 @@ void AClickMovePlayerController::OnInputStarted()
 		{
 			if (Pickable->bIsPickable)
 			{
-				PendingPickableActor = Hit.GetActor();
-				PendingPickableComponent = Pickable;
-
-				FVector MoveTarget = Hit.GetActor()->GetActorLocation();
-
-				if (UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld()))
-				{
-					FNavLocation ProjectedLocation;
-					// Radio de búsqueda generoso: busca el punto navegable más
-					// cercano dentro de 200 unidades del objeto.
-					if (NavSys->ProjectPointToNavigation(MoveTarget, ProjectedLocation, FVector(200.f, 200.f, 200.f)))
-					{
-						MoveTarget = ProjectedLocation.Location;
-					}
-				}
-
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MoveTarget);
+				HandlePickableInteraction(Hit.GetActor(), Pickable);
 				return;
 			}
 		}
 	}
 
-	StopMovement();
+	// Solo movemos al personaje si estamos completamente libres (top-down,
+	// sin ninguna capa de foco activa). Dentro de la sub-escena, clickear
+	// algo que no es pickeable no debe mover ni hacer nada más.
+	if (!IsFocused())
+	{
+		StopMovement();
+	}
 }
-
 
 void AClickMovePlayerController::OnSetDestinationTriggered()
 {
