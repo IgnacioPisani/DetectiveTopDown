@@ -455,10 +455,10 @@ void AClickMovePlayerController::PushSubScene(TSubclassOf<APawn> PawnClass, AAct
 	Possess(NewPawn);
 	SetViewTargetWithBlend(NewPawn, 0.5f, EViewTargetBlendFunction::VTBlend_EaseInOut);
 
-	SetInputMode(FInputModeGameOnly());
-	ApplyPersistentMouseCapture();   // <-- agregar esta línea acá
+	//SetInputMode(FInputModeGameOnly());
+	//ApplyPersistentMouseCapture();   // <-- agregar esta línea acá
 
-	bShowMouseCursor = true; // seguimos necesitando el cursor para clickear objetos en la sub-escena
+	//bShowMouseCursor = true; // seguimos necesitando el cursor para clickear objetos en la sub-escena
 
 	FocusStack.Add(Layer);
 }
