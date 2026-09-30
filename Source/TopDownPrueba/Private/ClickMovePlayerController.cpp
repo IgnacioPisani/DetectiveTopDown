@@ -118,8 +118,6 @@ void AClickMovePlayerController::OnInputStarted()
 {
 	const EInteractionMode Mode = GetCurrentMode();
 
-	// En modo Examine el click no dispara nada acá: el arrastre se maneja
-	// en OnLook() vía IsInputKeyDown, un click suelto no debe hacer nada.
 	if (Mode == EInteractionMode::Examine)
 	{
 		return;
@@ -132,7 +130,10 @@ void AClickMovePlayerController::OnInputStarted()
 	{
 		if (UPickableComponent* Pickable = Hit.GetActor()->FindComponentByClass<UPickableComponent>())
 		{
-			if (Pickable->bIsPickable)
+			const bool bIsExamineType = Pickable->Mode == EInteractionMode::Examine;
+			const bool bAllowedHere = !bIsExamineType || Mode == EInteractionMode::EnterSubScene;
+
+			if (Pickable->bIsPickable && bAllowedHere)
 			{
 				HandlePickableInteraction(Hit.GetActor(), Pickable);
 				return;
@@ -140,9 +141,6 @@ void AClickMovePlayerController::OnInputStarted()
 		}
 	}
 
-	// Solo movemos al personaje si estamos completamente libres (top-down,
-	// sin ninguna capa de foco activa). Dentro de la sub-escena, clickear
-	// algo que no es pickeable no debe mover ni hacer nada más.
 	if (!IsFocused())
 	{
 		StopMovement();
@@ -479,6 +477,8 @@ void AClickMovePlayerController::PushExamine(AActor* TargetActor)
 	// Lo movemos al centro de la pantalla, delante de la cámara actual.
 	if (ASubSceneFirstPersonPawn* FPPawn = Cast<ASubSceneFirstPersonPawn>(GetPawn()))
 	{
+		FPPawn->ResetLookToEntry();   // <-- agregado: vuelve al ángulo con el que entraste
+
 		const UPickableComponent* Pickable = TargetActor->FindComponentByClass<UPickableComponent>();
 		const float Distance = Pickable ? Pickable->ExamineDistance : 150.f;
 

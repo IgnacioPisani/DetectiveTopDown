@@ -27,7 +27,8 @@ public:
 	FRotator GetCameraRotation() const { return Camera->GetComponentRotation(); }
 	/** Llamado por el PlayerController con el delta del mouse cuando este pawn está activo. */
 	void AddLookInput(FVector2D Delta);
-
+	/** Vuelve la cámara a la rotación con la que arrancó la sub-escena. */
+	void ResetLookToEntry();
 
 protected:
 	virtual void BeginPlay() override;
@@ -53,4 +54,6 @@ protected:
 
 private:
 	float BaseYaw = 0.f;
+	
+		FRotator EntryRotation = FRotator::ZeroRotator;
 };

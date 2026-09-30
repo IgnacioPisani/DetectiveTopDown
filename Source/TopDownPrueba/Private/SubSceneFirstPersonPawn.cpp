@@ -16,6 +16,7 @@ void ASubSceneFirstPersonPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	BaseYaw = GetActorRotation().Yaw;
+	EntryRotation = GetActorRotation();
 }
 
 void ASubSceneFirstPersonPawn::AddLookInput(FVector2D Delta)
@@ -28,4 +29,8 @@ void ASubSceneFirstPersonPawn::AddLookInput(FVector2D Delta)
 	NewRotation.Yaw = BaseYaw + FMath::Clamp(YawOffset, MinYawOffset, MaxYawOffset);
 
 	SetActorRotation(NewRotation);
+}
+void ASubSceneFirstPersonPawn::ResetLookToEntry()
+{
+	SetActorRotation(EntryRotation);
 }

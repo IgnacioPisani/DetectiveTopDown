@@ -14,7 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/SubSceneFirstPersonPawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/SubSceneFirstPersonPawn.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/SubSceneFirstPersonPawn.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/SubSceneFirstPersonPawn.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,6 +206,7 @@
       <workItem from="1790103691735" duration="4829000" />
       <workItem from="1790478047775" duration="529000" />
       <workItem from="1790644730184" duration="122000" />
+      <workItem from="1790712462961" duration="2024000" />
     </task>
     <servers />
   </component>
