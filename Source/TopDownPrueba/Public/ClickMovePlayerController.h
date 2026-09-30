@@ -25,9 +25,19 @@ UCLASS()
 class AClickMovePlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
 public:
 	AClickMovePlayerController();
+
+	UFUNCTION(BlueprintPure, Category = "Interaction")
+	EInteractionMode GetCurrentMode() const;
+
+	UFUNCTION(BlueprintPure, Category = "Interaction")
+	bool IsFocused() const { return FocusStack.Num() > 0; }
+
+	/** Centraliza la regla de "¿este pickable puede reaccionar ahora?",
+	 *  usada tanto por el click como por el hover. */
+	UFUNCTION(BlueprintPure, Category = "Interaction")
+	bool CanInteractWithPickable(const UPickableComponent* Pickable) const;
 	
 	// Dentro de la clase, en la sección public:
 	UPROPERTY(BlueprintAssignable, Category = "Post Process")
@@ -112,6 +122,4 @@ protected:
 	/** Cierra la capa de foco más reciente y restaura lo anterior. */
 	void PopFocus();
 
-	EInteractionMode GetCurrentMode() const;
-	bool IsFocused() const { return FocusStack.Num() > 0; }
 };

@@ -1,13 +1,13 @@
 #include "PickableComponent.h"
 #include "Components/MeshComponent.h"
 #include "GameFramework/Actor.h"
+#include "ClickMovePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 UPickableComponent::UPickableComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
-
-
 
 void UPickableComponent::BeginPlay()
 {
@@ -24,7 +24,12 @@ void UPickableComponent::BeginPlay()
 
 void UPickableComponent::HandleBeginCursorOver(AActor* TouchedActor)
 {
-	if (!bIsPickable || !bEnableHoverHighlight || !HoverHighlightMaterial) return;
+	if (!bEnableHoverHighlight || !HoverHighlightMaterial) return;
+
+	const AClickMovePlayerController* PC = Cast<AClickMovePlayerController>(
+		UGameplayStatics::GetPlayerController(this, 0));
+
+	if (!PC || !PC->CanInteractWithPickable(this)) return;
 
 	for (UMeshComponent* Mesh : CachedMeshComponents)
 	{

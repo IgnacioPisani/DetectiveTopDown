@@ -130,10 +130,7 @@ void AClickMovePlayerController::OnInputStarted()
 	{
 		if (UPickableComponent* Pickable = Hit.GetActor()->FindComponentByClass<UPickableComponent>())
 		{
-			const bool bIsExamineType = Pickable->Mode == EInteractionMode::Examine;
-			const bool bAllowedHere = !bIsExamineType || Mode == EInteractionMode::EnterSubScene;
-
-			if (Pickable->bIsPickable && bAllowedHere)
+			if (CanInteractWithPickable(Pickable))
 			{
 				HandlePickableInteraction(Hit.GetActor(), Pickable);
 				return;
@@ -145,6 +142,26 @@ void AClickMovePlayerController::OnInputStarted()
 	{
 		StopMovement();
 	}
+}
+
+bool AClickMovePlayerController::CanInteractWithPickable(const UPickableComponent* Pickable) const
+{
+	if (!Pickable || !Pickable->bIsPickable)
+	{
+		return false;
+	}
+
+	const EInteractionMode CurrentMode = GetCurrentMode();
+
+	// Los objetos Examine solo son accesibles estando ya dentro de una sub-escena.
+	if (Pickable->Mode == EInteractionMode::Examine)
+	{
+		return CurrentMode == EInteractionMode::EnterSubScene;
+	}
+
+	// El resto (ShowUI, FirstPersonView, SimpleEvent, EnterSubScene) solo
+	// responde desde el top-down, sin ninguna capa de foco activa.
+	return CurrentMode == EInteractionMode::None;
 }
 
 void AClickMovePlayerController::OnSetDestinationTriggered()
