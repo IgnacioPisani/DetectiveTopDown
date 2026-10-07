@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
 #include "FocusTypes.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "ClickMovePlayerController.generated.h"
 
 class UInputMappingContext;
@@ -46,6 +47,19 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
+
+UPROPERTY(EditDefaultsOnly, Category = "Camera")
+float CameraRotationStepDegrees = 45.f;
+
+UPROPERTY(EditDefaultsOnly, Category = "Camera")
+float CameraRotationInterpSpeed = 8.f;
+
+void OnRotateCameraLeft();
+void OnRotateCameraRight();
+void RotateCameraStep(float DeltaYaw);
+
+float TargetCameraYaw = 0.f;
+TWeakObjectPtr<USpringArmComponent> CachedCameraBoom;
 	// ---------------- Input ----------------
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -65,6 +79,12 @@ protected:
 	/** Escape / botón de cancelar: cierra la capa de foco actual. */
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> CancelAction;
+		
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> RotateCameraLeftAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> RotateCameraRightAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> MouseLookMappingContext;

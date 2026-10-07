@@ -37,7 +37,14 @@ void AClickMovePlayerController::BeginPlay()
 	SetInputMode(FInputModeGameOnly());
 
 	ReleaseMouseCapture();   // <-- top-down empieza SIN captura forzada
-
+if (APawn* ControlledPawn = GetPawn())
+{
+	if (USpringArmComponent* Boom = ControlledPawn->FindComponentByClass<USpringArmComponent>())
+	{
+		CachedCameraBoom = Boom;
+		TargetCameraYaw = Boom->GetRelativeRotation().Yaw;
+	}
+}
 }
 
 
@@ -67,9 +74,41 @@ void AClickMovePlayerController::SetupInputComponent()
 		{
 			EIC->BindAction(CancelAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnCancel);
 		}
+		if (RotateCameraLeftAction)
+		{
+			EIC->BindAction(RotateCameraLeftAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnRotateCameraLeft);
+		}
+		if (RotateCameraRightAction)
+		{
+			EIC->BindAction(RotateCameraRightAction, ETriggerEvent::Started, this, &AClickMovePlayerController::OnRotateCameraRight);
+		}
 	}
 }
 
+
+void AClickMovePlayerController::OnRotateCameraLeft()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnRotateCameraLeft llamado"));
+	RotateCameraStep(-CameraRotationStepDegrees);
+}
+
+void AClickMovePlayerController::OnRotateCameraRight()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnRotateCameraRight llamado"));
+	RotateCameraStep(CameraRotationStepDegrees);
+}
+
+void AClickMovePlayerController::RotateCameraStep(float DeltaYaw)
+{
+	if (IsFocused())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("RotateCameraStep: IGNORADO, IsFocused=true"));
+		return;
+	}
+
+	TargetCameraYaw = FMath::UnwindDegrees(TargetCameraYaw + DeltaYaw);
+	UE_LOG(LogTemp, Warning, TEXT("RotateCameraStep: nuevo TargetCameraYaw=%f"), TargetCameraYaw);
+}
 // ------------------------------------------------------------------------
 // Input handlers
 // ------------------------------------------------------------------------
@@ -77,7 +116,29 @@ void AClickMovePlayerController::SetupInputComponent()
 void AClickMovePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+	if (!IsFocused())
+	{
+		if (!CachedCameraBoom.IsValid())
+		{
+			if (APawn* ControlledPawn = GetPawn())
+			{
+				CachedCameraBoom = ControlledPawn->FindComponentByClass<USpringArmComponent>();
+				UE_LOG(LogTemp, Warning, TEXT("Buscando SpringArm: encontrado=%d Pawn=%s"),
+					CachedCameraBoom.IsValid(), *GetNameSafe(ControlledPawn));
+			}
+		}
 
+		if (USpringArmComponent* Boom = CachedCameraBoom.Get())
+		{
+			FRotator CurrentRotation = Boom->GetRelativeRotation();
+
+			const float DeltaToTarget = FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, TargetCameraYaw);
+			const float NewYaw = CurrentRotation.Yaw +
+				FMath::FInterpTo(0.f, DeltaToTarget, DeltaTime, CameraRotationInterpSpeed);
+
+			Boom->SetRelativeRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
+		}
+	}
 	if (!PendingPickableActor.IsValid() || !PendingPickableComponent.IsValid())
 	{
 		return;
