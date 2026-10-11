@@ -68,6 +68,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Hover")
 	bool bEnableHoverHighlight = true;
+	
+	/** Si está activo, este pickable solo responde estando dentro de una
+     *  sub-escena (ej: el teléfono del escritorio). Los de tipo Examine
+     *  siempre lo exigen automáticamente, sin necesidad de tildar esto. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+    bool bOnlyInsideSubScene = false;
 
 	/** Material de overlay (Domain: Surface) usado para resaltar el mesh al pasar el mouse. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction|Hover")

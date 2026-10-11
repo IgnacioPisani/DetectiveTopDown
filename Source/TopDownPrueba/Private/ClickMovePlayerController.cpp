@@ -213,15 +213,13 @@ bool AClickMovePlayerController::CanInteractWithPickable(const UPickableComponen
 	}
 
 	const EInteractionMode CurrentMode = GetCurrentMode();
+	const bool bRequiresSubScene = Pickable->Mode == EInteractionMode::Examine || Pickable->bOnlyInsideSubScene;
 
-	// Los objetos Examine solo son accesibles estando ya dentro de una sub-escena.
-	if (Pickable->Mode == EInteractionMode::Examine)
+	if (bRequiresSubScene)
 	{
 		return CurrentMode == EInteractionMode::EnterSubScene;
 	}
 
-	// El resto (ShowUI, FirstPersonView, SimpleEvent, EnterSubScene) solo
-	// responde desde el top-down, sin ninguna capa de foco activa.
 	return CurrentMode == EInteractionMode::None;
 }
 
@@ -466,9 +464,10 @@ void AClickMovePlayerController::PushShowUI(TSubclassOf<UUserWidget> WidgetClass
 	{
 		Layer.Widget->AddToViewport();
 
-		FInputModeUIOnly InputMode;
+		FInputModeGameAndUI InputMode;
 		InputMode.SetWidgetToFocus(Layer.Widget->TakeWidget());
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputMode.SetHideCursorDuringCapture(false);
 		SetInputMode(InputMode);
 		bShowMouseCursor = true;
 	}
@@ -588,14 +587,9 @@ void AClickMovePlayerController::PopFocus()
 		{
 			Layer.Widget->RemoveFromParent();
 		}
-		if (IsFocused())
-		{
-			SetInputMode(FInputModeUIOnly());
-		}
-		else
-		{
-			SetInputMode(FInputModeGameOnly());
-		}
+		bShowMouseCursor = true;
+		SetInputMode(FInputModeGameOnly());
+		ReleaseMouseCapture();
 		break;
 	case EInteractionMode::FirstPersonView:
 		if (Layer.PreviousViewTarget)
