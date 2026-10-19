@@ -6,7 +6,7 @@
 #include "FocusTypes.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ClickMovePlayerController.generated.h"
-
+class ARoomCameraPivot;
 class UInputMappingContext;
 class UInputAction;
 class UPickableComponent;
@@ -29,6 +29,10 @@ class AClickMovePlayerController : public APlayerController
 public:
 	AClickMovePlayerController();
 
+	
+	UFUNCTION(BlueprintCallable, Category = "Camera")
+	void SetActiveRoomCamera(ARoomCameraPivot* Pivot);
+
 	UFUNCTION(BlueprintPure, Category = "Interaction")
 	EInteractionMode GetCurrentMode() const;
 
@@ -46,7 +50,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	float RoomCameraBlendTime = 0.75f;
 
+	TWeakObjectPtr<ARoomCameraPivot> ActiveRoomPivot;
 
 UPROPERTY(EditDefaultsOnly, Category = "Camera")
 float CameraRotationStepDegrees = 45.f;

@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Pawn.h"
+#include "RoomCameraPivot.h"
 #include "PickableComponent.h"
 #include "SubSceneFirstPersonPawn.h"
 
@@ -15,6 +16,20 @@ AClickMovePlayerController::AClickMovePlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
+}
+
+void AClickMovePlayerController::SetActiveRoomCamera(ARoomCameraPivot* Pivot)
+{
+	if (!Pivot || ActiveRoomPivot.Get() == Pivot)
+	{
+		return; // ya estamos en esta habitación, no reiniciamos nada
+	}
+
+	ActiveRoomPivot = Pivot;
+	CachedCameraBoom = Pivot->GetCameraBoom();
+	TargetCameraYaw = Pivot->GetCameraBoom()->GetRelativeRotation().Yaw;
+
+	SetViewTargetWithBlend(Pivot, RoomCameraBlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut);
 }
 
 void AClickMovePlayerController::BeginPlay()
@@ -116,26 +131,24 @@ void AClickMovePlayerController::RotateCameraStep(float DeltaYaw)
 void AClickMovePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+	
 	if (!IsFocused())
 	{
-		if (!CachedCameraBoom.IsValid())
+		if (!CachedCameraBoom.IsValid() && !ActiveRoomPivot.IsValid())
 		{
+			// Fallback: todavía no entramos a ninguna habitación con cámara fija
+			// (por ejemplo, el primer frame antes de pisar el primer trigger).
 			if (APawn* ControlledPawn = GetPawn())
 			{
 				CachedCameraBoom = ControlledPawn->FindComponentByClass<USpringArmComponent>();
-				UE_LOG(LogTemp, Warning, TEXT("Buscando SpringArm: encontrado=%d Pawn=%s"),
-					CachedCameraBoom.IsValid(), *GetNameSafe(ControlledPawn));
 			}
 		}
 
 		if (USpringArmComponent* Boom = CachedCameraBoom.Get())
 		{
 			FRotator CurrentRotation = Boom->GetRelativeRotation();
-
 			const float DeltaToTarget = FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, TargetCameraYaw);
-			const float NewYaw = CurrentRotation.Yaw +
-				FMath::FInterpTo(0.f, DeltaToTarget, DeltaTime, CameraRotationInterpSpeed);
-
+			const float NewYaw = CurrentRotation.Yaw + FMath::FInterpTo(0.f, DeltaToTarget, DeltaTime, CameraRotationInterpSpeed);
 			Boom->SetRelativeRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
 		}
 	}
@@ -607,7 +620,15 @@ void AClickMovePlayerController::PopFocus()
 			Layer.PreviousPawn->SetActorTickEnabled(true);
 
 			Possess(Layer.PreviousPawn);
-			SetViewTargetWithBlend(Layer.PreviousPawn, 0.5f, EViewTargetBlendFunction::VTBlend_EaseInOut);
+
+			if (ActiveRoomPivot.IsValid())
+			{
+				SetViewTargetWithBlend(ActiveRoomPivot.Get(), 0.5f, EViewTargetBlendFunction::VTBlend_EaseInOut);
+			}
+			else
+			{
+				SetViewTargetWithBlend(Layer.PreviousPawn, 0.5f, EViewTargetBlendFunction::VTBlend_EaseInOut);
+			}
 		}
 		if (Layer.SpawnedPawn)
 		{
@@ -615,8 +636,7 @@ void AClickMovePlayerController::PopFocus()
 		}
 		bShowMouseCursor = true;
 		SetInputMode(FInputModeGameOnly());
-		ReleaseMouseCapture();   // <-- volvemos al modo de cursor libre para click-to-move
-
+		ReleaseMouseCapture();
 		break;
 
 	case EInteractionMode::Examine:
