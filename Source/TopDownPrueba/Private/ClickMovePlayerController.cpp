@@ -25,16 +25,37 @@ void AClickMovePlayerController::SetActiveRoomCamera(ARoomCameraPivot* Pivot)
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("SetActiveRoomCamera: TargetArmLength=%f bDoCollisionTest=%d"),
-		Pivot->GetCameraBoom()->TargetArmLength,
-		Pivot->GetCameraBoom()->bDoCollisionTest);
+	UE_LOG(LogTemp, Warning, TEXT("SetActiveRoomCamera: %s TargetArmLength=%f"),
+		*GetNameSafe(Pivot), Pivot->GetCameraBoom()->TargetArmLength);
+
+	TWeakObjectPtr<ARoomCameraPivot> OldPivot = ActiveRoomPivot; // antes de reasignar
 
 	ActiveRoomPivot = Pivot;
 	CachedCameraBoom = Pivot->GetCameraBoom();
 	TargetCameraYaw = Pivot->GetCameraBoom()->GetRelativeRotation().Yaw;
 
 	SetViewTargetWithBlend(Pivot, RoomCameraBlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut);
+
+	// La nueva se muestra ya; la vieja se oculta cuando termina el blend,
+	// para no ver el vacío mientras la cámara todavía está en transición.
+	Pivot->SetRoomVisible(true);
+
+	if (OldPivot.IsValid())
+	{
+		FTimerHandle Handle;
+		GetWorldTimerManager().SetTimer(Handle,
+			FTimerDelegate::CreateWeakLambda(this, [this, OldPivot]()
+			{
+				// Si el jugador ya volvió a la vieja, no la ocultamos.
+				if (OldPivot.IsValid() && ActiveRoomPivot.Get() != OldPivot.Get())
+				{
+					OldPivot->HideExcept(ActiveRoomPivot.Get());
+				}
+			}),
+			RoomCameraBlendTime, false);
+	}
 }
+
 void AClickMovePlayerController::BeginPlay()
 {
 	Super::BeginPlay();

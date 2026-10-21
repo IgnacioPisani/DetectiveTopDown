@@ -3,6 +3,7 @@
 #include "RoomCameraPivot.h"
 #include "ClickMovePlayerController.h"
 #include "GameFramework/Pawn.h"
+#include "TimerManager.h"
 
 ARoomCameraTrigger::ARoomCameraTrigger()
 {
@@ -18,6 +19,29 @@ void ARoomCameraTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	TriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &ARoomCameraTrigger::HandleBeginOverlap);
+
+	// Un tick después, para que el pawn ya esté poseído y todos los pivotes hayan hecho BeginPlay.
+	GetWorldTimerManager().SetTimerForNextTick(this, &ARoomCameraTrigger::CheckInitialOverlaps);
+}
+
+void ARoomCameraTrigger::CheckInitialOverlaps()
+{
+	if (!TargetPivot) return;
+
+	TArray<AActor*> Overlapping;
+	TriggerVolume->GetOverlappingActors(Overlapping, APawn::StaticClass());
+
+	for (AActor* Actor : Overlapping)
+	{
+		if (APawn* P = Cast<APawn>(Actor))
+		{
+			if (AClickMovePlayerController* PC = Cast<AClickMovePlayerController>(P->GetController()))
+			{
+				PC->SetActiveRoomCamera(TargetPivot);
+				return;
+			}
+		}
+	}
 }
 
 void ARoomCameraTrigger::HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

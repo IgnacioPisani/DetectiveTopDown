@@ -7,10 +7,6 @@
 class UBoxComponent;
 class ARoomCameraPivot;
 
-/**
- * Colocá uno de estos cubriendo el piso de cada habitación. Al entrar el
- * personaje, activa el ARoomCameraPivot asignado en TargetPivot.
- */
 UCLASS()
 class ARoomCameraTrigger : public AActor
 {
@@ -31,4 +27,6 @@ protected:
 	UFUNCTION()
 	void HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	void CheckInitialOverlaps();
 };
