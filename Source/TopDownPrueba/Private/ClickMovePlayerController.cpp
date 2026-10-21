@@ -22,8 +22,12 @@ void AClickMovePlayerController::SetActiveRoomCamera(ARoomCameraPivot* Pivot)
 {
 	if (!Pivot || ActiveRoomPivot.Get() == Pivot)
 	{
-		return; // ya estamos en esta habitación, no reiniciamos nada
+		return;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("SetActiveRoomCamera: TargetArmLength=%f bDoCollisionTest=%d"),
+		Pivot->GetCameraBoom()->TargetArmLength,
+		Pivot->GetCameraBoom()->bDoCollisionTest);
 
 	ActiveRoomPivot = Pivot;
 	CachedCameraBoom = Pivot->GetCameraBoom();
@@ -31,7 +35,6 @@ void AClickMovePlayerController::SetActiveRoomCamera(ARoomCameraPivot* Pivot)
 
 	SetViewTargetWithBlend(Pivot, RoomCameraBlendTime, EViewTargetBlendFunction::VTBlend_EaseInOut);
 }
-
 void AClickMovePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
