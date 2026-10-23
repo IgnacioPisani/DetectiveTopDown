@@ -19,9 +19,33 @@ void ARoomCameraTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	TriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &ARoomCameraTrigger::HandleBeginOverlap);
-
+	TriggerVolume->OnComponentEndOverlap.AddDynamic(this, &ARoomCameraTrigger::HandleEndOverlap);
 	// Un tick después, para que el pawn ya esté poseído y todos los pivotes hayan hecho BeginPlay.
 	GetWorldTimerManager().SetTimerForNextTick(this, &ARoomCameraTrigger::CheckInitialOverlaps);
+}
+
+void ARoomCameraTrigger::HandleEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	APawn* OtherPawn = Cast<APawn>(OtherActor);
+	if (!OtherPawn || !OtherPawn->IsPlayerControlled()) return;
+
+	AClickMovePlayerController* PC = Cast<AClickMovePlayerController>(OtherPawn->GetController());
+	if (!PC) return;
+
+	// ¿Sigue tocando algún otro trigger de habitación? Si es así, esa pasa a ser la activa.
+	TArray<AActor*> Others;
+	OtherPawn->GetOverlappingActors(Others, ARoomCameraTrigger::StaticClass());
+
+	for (AActor* Actor : Others)
+	{
+		const ARoomCameraTrigger* Other = Cast<ARoomCameraTrigger>(Actor);
+		if (Other && Other != this && Other->TargetPivot)
+		{
+			PC->SetActiveRoomCamera(Other->TargetPivot);
+			return;
+		}
+	}
 }
 
 void ARoomCameraTrigger::CheckInitialOverlaps()

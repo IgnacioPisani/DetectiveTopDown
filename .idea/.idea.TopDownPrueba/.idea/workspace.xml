@@ -13,9 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Props.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Props.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Structure.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Props/MI_Bulletin_Board_B.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Props/MI_Bulletin_Board_B.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Structure/MI_Fireplace_Mantel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Structure/MI_Fireplace_Mantel.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Materials/Materials/Kuwaharaplus_Inst.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/Materials/Kuwaharaplus_Inst.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/NoirCharacter/AccuRIG/NoirAR_Char.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/NoirCharacter/AccuRIG/NoirAR_Char.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/RoomCameraTrigger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/RoomCameraTrigger.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -213,6 +220,7 @@
       <workItem from="1791681303917" duration="2695000" />
       <workItem from="1792448535098" duration="631000" />
       <workItem from="1792613477980" duration="4828000" />
+      <workItem from="1792708689413" duration="870000" />
     </task>
     <servers />
   </component>
