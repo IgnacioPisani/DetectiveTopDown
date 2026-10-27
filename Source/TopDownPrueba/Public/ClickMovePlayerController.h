@@ -31,6 +31,11 @@ public:
 
 	
 	UFUNCTION(BlueprintCallable, Category = "Camera")
+	void RefreshRoomVisibility();
+
+	void SnapRoomPivotToPawn();
+	
+	UFUNCTION(BlueprintCallable, Category = "Camera")
 	void SetActiveRoomCamera(ARoomCameraPivot* Pivot);
 
 	UFUNCTION(BlueprintPure, Category = "Interaction")
@@ -65,6 +70,7 @@ void OnRotateCameraLeft();
 void OnRotateCameraRight();
 void RotateCameraStep(float DeltaYaw);
 
+	
 float TargetCameraYaw = 0.f;
 TWeakObjectPtr<USpringArmComponent> CachedCameraBoom;
 	// ---------------- Input ----------------

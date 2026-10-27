@@ -13,16 +13,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Props.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Props.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/M_Structure.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Props/MI_Bulletin_Board_B.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Props/MI_Bulletin_Board_B.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Structure/MI_Fireplace_Mantel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Assets/Materials/Structure/MI_Fireplace_Mantel.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Materials/Materials/Kuwaharaplus_Inst.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/Materials/Kuwaharaplus_Inst.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/NoirCharacter/AccuRIG/NoirAR_Char.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/NoirCharacter/AccuRIG/NoirAR_Char.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraPivot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraPivot.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/RoomCameraTrigger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/RoomCameraTrigger.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TopDownPrueba.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/TopDownPrueba.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,11 +47,15 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/FocusTypes.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/LoopDirector.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/LoopResetTrigger.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/PickableTypes.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/SubSceneFirstPersonPawn.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/FocusTypes.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/LoopDirector.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/LoopResetTrigger.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/PickableTypes.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/RoomCameraTrigger.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Public/SubSceneFirstPersonPawn.h" root0="FORCE_HIGHLIGHTING" />
@@ -221,6 +222,7 @@
       <workItem from="1792448535098" duration="631000" />
       <workItem from="1792613477980" duration="4828000" />
       <workItem from="1792708689413" duration="870000" />
+      <workItem from="1793129780535" duration="3634000" />
     </task>
     <servers />
   </component>

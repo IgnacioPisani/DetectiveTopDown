@@ -64,6 +64,32 @@ void AClickMovePlayerController::SetActiveRoomCamera(ARoomCameraPivot* Pivot)
 	}
 }
 
+void AClickMovePlayerController::RefreshRoomVisibility()
+{
+	if (ActiveRoomPivot.IsValid())
+	{
+		ActiveRoomPivot->SetRoomVisible(true);
+	}
+}
+
+void AClickMovePlayerController::SnapRoomPivotToPawn()
+{
+	ARoomCameraPivot* Pivot = ActiveRoomPivot.Get();
+	const APawn* P = GetPawn();
+	if (Pivot && P && Pivot->bFollowPawn)
+	{
+		const FVector Loc = Pivot->GetActorLocation();
+		Pivot->SetActorLocation(FVector(P->GetActorLocation().X, P->GetActorLocation().Y, Loc.Z));
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT(">>> Snap: Pivot=%s Arm=%f BoomRot=%s ViewTarget=%s FOV=%f"),
+		*GetNameSafe(Pivot),
+		Pivot ? Pivot->GetCameraBoom()->TargetArmLength : 0.f,
+		Pivot ? *Pivot->GetCameraBoom()->GetRelativeRotation().ToString() : TEXT("none"),
+		*GetNameSafe(GetViewTarget()),
+		PlayerCameraManager ? PlayerCameraManager->GetFOVAngle() : 0.f);
+}
+
 void AClickMovePlayerController::BeginPlay()
 {
 	Super::BeginPlay();

@@ -61,7 +61,9 @@ void ARoomCameraPivot::SetRoomVisible(bool bVisible)
 {
 	for (AActor* A : RoomActors)
 	{
-		if (A) A->SetActorHiddenInGame(!bVisible);
+		if (!A) continue;
+		const bool bLoopHidden = A->ActorHasTag(TEXT("LoopHidden"));
+		A->SetActorHiddenInGame(!bVisible || bLoopHidden);
 	}
 }
 
