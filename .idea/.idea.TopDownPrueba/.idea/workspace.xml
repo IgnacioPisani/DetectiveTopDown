@@ -14,7 +14,8 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Widget/WBP_Tel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Widget/WBP_Tel.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TopDownPrueba.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/TopDownPrueba.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,6 +220,7 @@
       <workItem from="1792708689413" duration="870000" />
       <workItem from="1793129780535" duration="3634000" />
       <workItem from="1793134296061" duration="367000" />
+      <workItem from="1793385574413" duration="1025000" />
     </task>
     <servers />
   </component>
