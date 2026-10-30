@@ -15,11 +15,6 @@
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraPivot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraPivot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/RoomCameraTrigger.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/ClickMovePlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TopDownPrueba.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/TopDownPrueba.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,6 +218,7 @@
       <workItem from="1792613477980" duration="4828000" />
       <workItem from="1792708689413" duration="870000" />
       <workItem from="1793129780535" duration="3634000" />
+      <workItem from="1793134296061" duration="367000" />
     </task>
     <servers />
   </component>
