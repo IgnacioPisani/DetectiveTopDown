@@ -14,8 +14,11 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Widget/Images/Terminal_telefónico_industrial_retro.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Widget/Images/Weathered_Olive_Intercom_Keypad.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Widget/WBP_Tel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Widget/WBP_Tel.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TopDownPrueba.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/TopDownPrueba.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/TelefonoWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/TelefonoWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/TelefonoWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/TelefonoWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -221,6 +224,9 @@
       <workItem from="1793129780535" duration="3634000" />
       <workItem from="1793134296061" duration="367000" />
       <workItem from="1793385574413" duration="1025000" />
+      <workItem from="1793753673153" duration="618000" />
+      <workItem from="1793920923441" duration="1019000" />
+      <workItem from="1794078354345" duration="450000" />
     </task>
     <servers />
   </component>

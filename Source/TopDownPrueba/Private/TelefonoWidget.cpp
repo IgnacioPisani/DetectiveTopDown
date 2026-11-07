@@ -1,6 +1,8 @@
 #include "TelefonoWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
+#include "Engine/Texture2D.h"
 
 void UTelefonoWidget::NativeOnInitialized()
 {
@@ -19,14 +21,17 @@ void UTelefonoWidget::NativeOnInitialized()
 	Button_11->OnClicked.AddDynamic(this, &UTelefonoWidget::OnBtn0);
 	Button_12->OnClicked.AddDynamic(this, &UTelefonoWidget::OnBtnHash);
 
+	Btn_borrar->OnClicked.AddDynamic(this, &UTelefonoWidget::OnBorrar);
+	Btn_llamar->OnClicked.AddDynamic(this, &UTelefonoWidget::OnLlamar);
+
 	RefreshDisplay();
 }
 
 void UTelefonoWidget::AppendChar(TCHAR C)
 {
-	if (CurrentCode.Len() >= MaxChars)
+	if (bUnlocked || CurrentCode.Len() >= MaxChars)
 	{
-		return; // límite alcanzado
+		return;
 	}
 
 	CurrentCode.AppendChar(C);
@@ -49,6 +54,45 @@ void UTelefonoWidget::RefreshDisplay()
 	if (TextBlock_Display)
 	{
 		TextBlock_Display->SetText(FText::FromString(CurrentCode));
+	}
+}
+
+void UTelefonoWidget::OnBorrar()
+{
+	if (bUnlocked || CurrentCode.IsEmpty())
+	{
+		return;
+	}
+
+	CurrentCode.LeftChopInline(1); // saca el último carácter
+	RefreshDisplay();
+}
+
+void UTelefonoWidget::OnLlamar()
+{
+	if (bUnlocked)
+	{
+		return;
+	}
+
+	if (CurrentCode == CorrectCode)
+	{
+		bUnlocked = true;
+
+		if (Image_Light && SuccessImage)
+		{
+			Image_Light->SetBrushFromTexture(SuccessImage);
+		}
+		if (TextBlock_Display)
+		{
+			TextBlock_Display->SetText(FText::FromString(TEXT("CALLING...")));
+		}
+		OnCallSuccess.Broadcast();
+	}
+	else
+	{
+		ClearDisplay();
+		OnCallFailed.Broadcast();
 	}
 }
 
