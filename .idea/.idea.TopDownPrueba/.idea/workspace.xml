@@ -14,7 +14,9 @@
   <component name="ChangeListManager">
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Widget/WBP_Lockpick.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Widget/WBP_Lockpick.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/LockpickWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/LockpickWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/LockpickWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/LockpickWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,6 +226,7 @@
       <workItem from="1793920923441" duration="1019000" />
       <workItem from="1794078354345" duration="450000" />
       <workItem from="1794676009218" duration="1495000" />
+      <workItem from="1794861895487" duration="1257000" />
     </task>
     <servers />
   </component>

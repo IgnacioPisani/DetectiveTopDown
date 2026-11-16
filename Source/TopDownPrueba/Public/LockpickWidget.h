@@ -45,8 +45,6 @@ protected:
 	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 	// --- Configuración (Class Defaults del WBP) ---
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lockpick")
@@ -102,5 +100,6 @@ private:
 	float PickStress = 0.f;
 	int32 PicksRemaining = 0;
 	bool bTurning = false;
+	bool bMouseHeld = false;
 	bool bFinished = false;
 };

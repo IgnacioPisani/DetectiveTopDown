@@ -6,6 +6,8 @@
 void ULockpickWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	SetIsFocusable(true);
+	SetKeyboardFocus();
 	StartLockpick(Difficulty, StartingPicks);
 }
 
@@ -17,6 +19,7 @@ void ULockpickWidget::StartLockpick(ELockDifficulty NewDifficulty, int32 NewPick
 	LockAngle = 0.f;
 	PickStress = 0.f;
 	bTurning = false;
+	bMouseHeld = false;
 	bFinished = false;
 
 	UE_LOG(LogTemp, Warning, TEXT(">>> Lockpick: SweetSpot=%f Tol=%f"), SweetSpot, GetTolerance());
@@ -44,6 +47,16 @@ void ULockpickWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	{
 		return;
 	}
+
+	// Teclado por polling: no depende de tener el foco de Slate.
+	bool bKeyHeld = false;
+	if (const APlayerController* PC = GetOwningPlayer())
+	{
+		bKeyHeld = PC->IsInputKeyDown(EKeys::A) || PC->IsInputKeyDown(EKeys::D)
+			|| PC->IsInputKeyDown(EKeys::SpaceBar)
+			|| PC->IsInputKeyDown(EKeys::Left) || PC->IsInputKeyDown(EKeys::Right);
+	}
+	bTurning = bMouseHeld || bKeyHeld;
 
 	// La ganzúa se congela mientras la cerradura gira.
 	if (!bTurning)
@@ -99,6 +112,7 @@ void ULockpickWidget::BreakPick()
 	LockAngle = 0.f;
 	PickStress = 0.f;
 	bTurning = false;
+	bMouseHeld = false;
 	RefreshPicksText();
 	OnPickBroken.Broadcast();
 
@@ -112,6 +126,7 @@ void ULockpickWidget::Finish(bool bSuccess)
 {
 	bFinished = true;
 	bTurning = false;
+	bMouseHeld = false;
 
 	if (bSuccess)
 	{
@@ -143,7 +158,8 @@ FReply ULockpickWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 {
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		bTurning = true;
+		SetKeyboardFocus();
+		bMouseHeld = true;
 		return FReply::Handled();
 	}
 	return FReply::Unhandled();
@@ -153,30 +169,8 @@ FReply ULockpickWidget::NativeOnMouseButtonUp(const FGeometry& InGeometry, const
 {
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		bTurning = false;
+		bMouseHeld = false;
 		return FReply::Handled();
 	}
 	return FReply::Unhandled();
-}
-
-FReply ULockpickWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
-{
-	const FKey K = InKeyEvent.GetKey();
-	if (K == EKeys::A || K == EKeys::D || K == EKeys::SpaceBar || K == EKeys::Left || K == EKeys::Right)
-	{
-		bTurning = true;
-		return FReply::Handled();
-	}
-	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
-}
-
-FReply ULockpickWidget::NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
-{
-	const FKey K = InKeyEvent.GetKey();
-	if (K == EKeys::A || K == EKeys::D || K == EKeys::SpaceBar || K == EKeys::Left || K == EKeys::Right)
-	{
-		bTurning = false;
-		return FReply::Handled();
-	}
-	return Super::NativeOnKeyUp(InGeometry, InKeyEvent);
 }
