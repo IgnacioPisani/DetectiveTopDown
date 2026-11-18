@@ -86,7 +86,17 @@ protected:
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UImage> Image_Lock;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UImage> Image_Pick;
 	UPROPERTY(meta = (BindWidgetOptional)) TObjectPtr<UTextBlock> Text_Picks;
+	// Textura de la ganzúa rota. Si queda vacía, se usa la misma ganzúa pero cayendo.
+	UPROPERTY(EditAnywhere, Category = "Lockpick|Break")
+	TObjectPtr<UTexture2D> BrokenPickTexture;
 
+	// Segundos que dura la animación de rotura antes de la ganzúa nueva.
+	UPROPERTY(EditAnywhere, Category = "Lockpick|Break", meta = (ClampMin = "0.1"))
+	float BrokenDisplayTime = 1.0f;
+
+	// Píxeles que cae la ganzúa rota.
+	UPROPERTY(EditAnywhere, Category = "Lockpick|Break")
+	float BrokenFallDistance = 150.f;
 private:
 	float GetTolerance() const;
 	void BreakPick();
@@ -102,4 +112,10 @@ private:
 	bool bTurning = false;
 	bool bMouseHeld = false;
 	bool bFinished = false;
+	void EndBreak();
+
+	FSlateBrush OriginalPickBrush;
+	float BrokenAngle = 0.f;
+	float BreakElapsed = 0.f;
+	bool bBreaking = false;
 };
