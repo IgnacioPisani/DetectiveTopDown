@@ -1,6 +1,7 @@
 #include "LoopDirector.h"
 #include "LoopSubsystem.h"
 #include "ClickMovePlayerController.h"
+#include "RoomCameraPivot.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/LightComponent.h"
@@ -11,8 +12,19 @@
 #include "EngineUtils.h"
 #include "TimerManager.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
 
 static const FName LoopHiddenTag(TEXT("LoopHidden"));
+
+// ¿Algún pivote de habitación controla la visibilidad de este actor?
+static bool IsRoomManaged(UWorld* World, AActor* A)
+{
+	for (TActorIterator<ARoomCameraPivot> It(World); It; ++It)
+	{
+		if (It->ContainsActor(A)) return true;
+	}
+	return false;
+}
 
 ALoopDirector::ALoopDirector()
 {
@@ -34,30 +46,6 @@ void ALoopDirector::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Juntamos actores con cualquier tag "Loop_*" y las luces marcadas.
-	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
-	{
-		AActor* A = *It;
-		for (const FName& Tag : A->Tags)
-		{
-			if (Tag.ToString().StartsWith(TEXT("Loop_")))
-			{
-				LoopActors.Add(A);
-				break;
-			}
-		}
-
-		if (A->ActorHasTag(TEXT("LoopLight")))
-		{
-			TArray<ULightComponent*> Lights;
-			A->GetComponents<ULightComponent>(Lights);
-			for (ULightComponent* L : Lights)
-			{
-				BaseIntensity.Add(L, L->Intensity);
-			}
-		}
-	}
-
 	if (Loops.Num() > 0)
 	{
 		const ULoopSubsystem* S = GetGameInstance()->GetSubsystem<ULoopSubsystem>();
@@ -69,32 +57,86 @@ void ALoopDirector::ApplyLoop(int32 Index)
 {
 	if (!Loops.IsValidIndex(Index) || !Loops[Index]) return;
 	const ULoopData* Data = Loops[Index];
+	UWorld* World = GetWorld();
 
-	for (const TWeakObjectPtr<AActor>& Weak : LoopActors)
+	// 1) Reset de lo que ocultó el loop anterior
+	for (const TWeakObjectPtr<AActor>& Weak : LoopHiddenActors)
 	{
-		AActor* A = Weak.Get();
-		if (!A) continue;
-
-		if (A->ActorHasTag(Data->ActiveTag))
+		if (AActor* A = Weak.Get())
 		{
-			A->Tags.Remove(LoopHiddenTag); // lo vuelve a mostrar el sistema de habitaciones
+			A->Tags.Remove(LoopHiddenTag);
+			if (!IsRoomManaged(World, A))
+			{
+				A->SetActorHiddenInGame(false);
+			}
 		}
-		else
+	}
+	LoopHiddenActors.Reset();
+
+	// 2) Visibles forzados
+	for (const FName& Tag : Data->VisibleTags)
+	{
+		TArray<AActor*> Found;
+		UGameplayStatics::GetAllActorsWithTag(this, Tag, Found);
+		for (AActor* A : Found)
+		{
+			A->Tags.Remove(LoopHiddenTag);
+			if (!IsRoomManaged(World, A))
+			{
+				A->SetActorHiddenInGame(false);
+			}
+		}
+	}
+
+	// 3) Ocultos (ganan sobre visibles)
+	for (const FName& Tag : Data->HiddenTags)
+	{
+		TArray<AActor*> Found;
+		UGameplayStatics::GetAllActorsWithTag(this, Tag, Found);
+		for (AActor* A : Found)
 		{
 			A->Tags.AddUnique(LoopHiddenTag);
 			A->SetActorHiddenInGame(true);
+			LoopHiddenActors.AddUnique(A);
 		}
 	}
 
-	for (const TPair<TWeakObjectPtr<ULightComponent>, float>& Pair : BaseIntensity)
+	// 4) Luces: restaurar originales y aplicar overrides del loop
+	for (const TPair<TWeakObjectPtr<ULightComponent>, FLightBase>& Pair : LightBases)
 	{
 		if (ULightComponent* L = Pair.Key.Get())
 		{
-			L->SetLightColor(Data->LightColor);
-			L->SetIntensity(Pair.Value * Data->LightIntensityMul);
+			L->SetLightColor(Pair.Value.Color);
+			L->SetIntensity(Pair.Value.Intensity);
 		}
 	}
 
+	for (const FLoopLightSetting& Setting : Data->Lights)
+	{
+		if (Setting.LightTag.IsNone()) continue;
+
+		TArray<AActor*> Found;
+		UGameplayStatics::GetAllActorsWithTag(this, Setting.LightTag, Found);
+		for (AActor* A : Found)
+		{
+			TArray<ULightComponent*> Lights;
+			A->GetComponents<ULightComponent>(Lights);
+			for (ULightComponent* L : Lights)
+			{
+				const TWeakObjectPtr<ULightComponent> Key(L);
+				if (!LightBases.Contains(Key))
+				{
+					LightBases.Add(Key, FLightBase{ L->GetLightColor(), L->Intensity });
+				}
+				const FLightBase& Base = LightBases[Key];
+
+				L->SetLightColor(Setting.Color);
+				L->SetIntensity(Base.Intensity * Setting.IntensityMul);
+			}
+		}
+	}
+
+	// 5) Post process, audio, visibilidad de habitación
 	PostProcess->Settings.WeightedBlendables.Array.Reset();
 	if (Data->PostProcessMaterial)
 	{
@@ -107,7 +149,6 @@ void ALoopDirector::ApplyLoop(int32 Index)
 		AmbienceAudio->Play();
 	}
 
-	// Que la habitación activa muestre los actores del loop nuevo.
 	if (AClickMovePlayerController* PC = Cast<AClickMovePlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
 		PC->RefreshRoomVisibility();

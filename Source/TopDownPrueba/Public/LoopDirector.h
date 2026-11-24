@@ -11,22 +11,39 @@ class ULightComponent;
 class USoundBase;
 class UMaterialInterface;
 
+USTRUCT(BlueprintType)
+struct FLoopLightSetting
+{
+	GENERATED_BODY()
+
+	// Tag de la luz en el nivel (Details → Actor → Tags). Puede ser compartido por varias luces.
+	UPROPERTY(EditAnywhere, Category = "Loop")
+	FName LightTag;
+
+	UPROPERTY(EditAnywhere, Category = "Loop")
+	FLinearColor Color = FLinearColor::White;
+
+	UPROPERTY(EditAnywhere, Category = "Loop", meta = (ClampMin = "0"))
+	float IntensityMul = 1.f;
+};
+
 UCLASS(BlueprintType)
 class ULoopData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	// Los actores con este tag (ej. "Loop_2") se muestran en este loop; los de otros Loop_* se ocultan.
+	// Luces que cambian en este loop. Las que no figuran vuelven a su color original.
 	UPROPERTY(EditAnywhere, Category = "Loop")
-	FName ActiveTag;
+	TArray<FLoopLightSetting> Lights;
 
-	// Se aplica a los actores con tag "LoopLight" (luces Movable).
+	// Actores con alguno de estos tags se OCULTAN en este loop.
 	UPROPERTY(EditAnywhere, Category = "Loop")
-	FLinearColor LightColor = FLinearColor::White;
+	TArray<FName> HiddenTags;
 
+	// Actores con alguno de estos tags se MUESTRAN en este loop (útil para assets que arrancan ocultos).
 	UPROPERTY(EditAnywhere, Category = "Loop")
-	float LightIntensityMul = 1.f;
+	TArray<FName> VisibleTags;
 
 	UPROPERTY(EditAnywhere, Category = "Loop")
 	TObjectPtr<UMaterialInterface> PostProcessMaterial;
@@ -46,7 +63,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Loop")
 	TArray<TObjectPtr<ULoopData>> Loops;
 
-	// Cualquier actor (un TargetPoint sirve): posición y rotación de reaparición.
 	UPROPERTY(EditAnywhere, Category = "Loop")
 	TObjectPtr<AActor> RespawnPoint;
 
@@ -59,7 +75,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Loop")
 	void NextLoop();
 
-	// Para eventos "sorpresa" (Level Sequence, sonidos, etc.) desde Blueprint.
 	UFUNCTION(BlueprintImplementableEvent, Category = "Loop")
 	void OnLoopApplied(int32 Index, ULoopData* Data);
 
@@ -76,7 +91,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UAudioComponent> AmbienceAudio;
 
-	TArray<TWeakObjectPtr<AActor>> LoopActors;
-	TMap<TWeakObjectPtr<ULightComponent>, float> BaseIntensity;
+	struct FLightBase
+	{
+		FLinearColor Color;
+		float Intensity;
+	};
+
+	TMap<TWeakObjectPtr<ULightComponent>, FLightBase> LightBases;
+	TArray<TWeakObjectPtr<AActor>> LoopHiddenActors;
 	bool bBusy = false;
 };
