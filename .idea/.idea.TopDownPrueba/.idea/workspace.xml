@@ -15,7 +15,6 @@
     <list default="true" id="06f82558-739e-4758-a73b-44a8ed883dd4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownPrueba/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DA_Loop1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DA_Loop1.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DA_Loop2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DA_Loop2.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DetectiveStart/Maps/DetectiveOffice_Layout.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Private/LoopDirector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Private/LoopDirector.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/TopDownPrueba/Public/LoopDirector.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/TopDownPrueba/Public/LoopDirector.h" afterDir="false" />
@@ -44,6 +43,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Developer/AITestSuite/Classes/MockAI.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/ClickMovePlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/FocusTypes.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/TopDownPrueba/Private/LoopDirector.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -232,6 +232,7 @@
       <workItem from="1794933111186" duration="944000" />
       <workItem from="1795030764265" duration="592000" />
       <workItem from="1795545463126" duration="1123000" />
+      <workItem from="1795547516991" duration="1835000" />
     </task>
     <servers />
   </component>

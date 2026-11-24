@@ -25,6 +25,23 @@ struct FLoopLightSetting
 
 	UPROPERTY(EditAnywhere, Category = "Loop", meta = (ClampMin = "0"))
 	float IntensityMul = 1.f;
+
+	// ---------------- Parpadeo ----------------
+	UPROPERTY(EditAnywhere, Category = "Loop|Blink")
+	bool bBlink = false;
+
+	/** Intensidad "apagada" del parpadeo, relativa a la intensidad ya calculada
+	 *  (Base * IntensityMul). 0 = se apaga del todo, 0.3 = atenuada, etc. */
+	UPROPERTY(EditAnywhere, Category = "Loop|Blink", meta = (EditCondition = "bBlink", ClampMin = "0", ClampMax = "1"))
+	float BlinkLowIntensityMul = 0.1f;
+
+	/** Rango de tiempo entre toggles. Poné Min=Max para un parpadeo parejo,
+	 *  o un rango para que se sienta como un foco fallando (más orgánico). */
+	UPROPERTY(EditAnywhere, Category = "Loop|Blink", meta = (EditCondition = "bBlink", ClampMin = "0.01"))
+	float BlinkIntervalMin = 0.05f;
+
+	UPROPERTY(EditAnywhere, Category = "Loop|Blink", meta = (EditCondition = "bBlink", ClampMin = "0.01"))
+	float BlinkIntervalMax = 0.3f;
 };
 
 UCLASS(BlueprintType)
@@ -37,6 +54,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Loop")
 	TArray<FLoopLightSetting> Lights;
 
+	
 	// Actores con alguno de estos tags se OCULTAN en este loop.
 	UPROPERTY(EditAnywhere, Category = "Loop")
 	TArray<FName> HiddenTags;
@@ -58,6 +76,7 @@ class ALoopDirector : public AActor
 	GENERATED_BODY()
 
 public:
+	void Tick(float DeltaTime);
 	ALoopDirector();
 
 	UPROPERTY(EditAnywhere, Category = "Loop")
@@ -85,6 +104,19 @@ protected:
 	void DoTeleportAndAdvance();
 	void FinishLoop();
 
+	struct FBlinkingLight
+	{
+		TWeakObjectPtr<ULightComponent> Light;
+		float HighIntensity = 0.f;
+		float LowIntensity = 0.f;
+		float IntervalMin = 0.05f;
+		float IntervalMax = 0.3f;
+		float TimeRemaining = 0.f;
+		bool bHighState = true;
+	};
+
+	TArray<FBlinkingLight> BlinkingLights;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UPostProcessComponent> PostProcess;
 
